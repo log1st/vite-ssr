@@ -2,13 +2,9 @@ const fs = require('fs')
 const path = require('path')
 const express = require('express')
 const { createServer: createViteServer } = require('vite')
-const cookieParser = require('cookie-parser')
-const cookie = require('cookie');
 
 async function createServer() {
   const app = express()
-
-  app.use(cookieParser());
 
   // Create vite server in middleware mode. This disables Vite's own HTML
   // serving logic and let the parent server take control.
@@ -52,8 +48,6 @@ async function createServer() {
         request: req,
         newStateWrapper,
       });
-
-      // console.log(cookie.parse(res.headers));
 
       // 5. Inject the app-rendered HTML into the template.
       const html = template

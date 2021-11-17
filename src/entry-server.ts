@@ -9,7 +9,7 @@ import App from './App.vue'
 export const render = async (url, {request, newStateWrapper}) => {
   const app = createSSRApp(App)
   app.provide('context', {
-    request,
+    // request,
     newStateWrapper,
   });
   const { collect } = setup(app)

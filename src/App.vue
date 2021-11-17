@@ -24,40 +24,26 @@ export default defineComponent({
     NCascader,
     NSelect
   },
+  created() {
+    this.state.user = 1
+  },
   setup() {
     const ctx = inject('context');
 
-    const state = ref<{
-      user: string
-    }>({
-      ...{
-        user: '',
-      },
-      ...ctx ? (() => {
-        try {
-          return JSON.parse(ctx.request.cookies.state)
-        } catch (e) {
-          return {}
-        }
-      })() : (window._STATE || {})
+    const state = ref({
+      user: '',
+      ...(ctx?.newStateWrapper ? {} : (window._STATE || {}))
     });
 
-    if(ctx) {
+    if(ctx?.newStateWrapper) {
       ctx.newStateWrapper.state = state.value;
-    }
 
-    watch(state, (newState) => {
-      if(ctx) {
-        ctx.response.cookie('state', newState, {
-          path: '/',
-        });
+      watch(state, (newState) => {
         ctx.newStateWrapper.state = newState;
-      } else {
-        document.cookie = `state=${JSON.stringify(newState)}`
-      }
-    }, {
-      deep: true,
-    })
+      }, {
+        deep: true,
+      })
+    }
 
     provide('state', state);
 
